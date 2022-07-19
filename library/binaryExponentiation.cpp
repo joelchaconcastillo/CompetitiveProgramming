@@ -25,9 +25,23 @@ long long fastBinPowMod(long long a, long long n, long long m){
    }
    return res;
 }
+/*
+ *  3 = 011
+ *       42 
+ * */
+long long fastProd(long long a, long long b){
+   long long res=0;
+   while(b){
+     if(b&1) res = res+a;
+     a =2*a;
+     b>>=1;
+   }
+   return res;
+}
 int main(){
    cout << recursiveBinPow(2, 10)<<endl;
    cout << fastBinPow(2, 10)<<endl;
    cout << fastBinPowMod(2, 10,10)<<endl;
+   cout << fastProd(9, 11)<<endl;
    return 0;
 }
