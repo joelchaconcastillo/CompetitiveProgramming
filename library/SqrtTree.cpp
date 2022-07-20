@@ -161,21 +161,25 @@ public:
 		: n((int)a.size()), lg(log2Up(n)), v(a), clz(1 << lg), onLayer(lg+1) {
 		clz[0] = 0;
 		for (int i = 1; i < (int)clz.size(); i++) {
-			clz[i] = clz[i >> 1] + 1;
+			clz[i] = clz[i >> 1] + 1; //this calculates the most left bit on for the i-th element
 		}
+		/*
+		 *i  : 0 1 2 3 4 5 6 7 8
+		 *clz: 0 1 2 2 3 3 3 3 4
+		 * */
 		int tlg = lg;
 		while (tlg > 1) {
-			onLayer[tlg] = (int)layers.size();
-			layers.push_back(tlg);
+			onLayer[tlg] = (int)layers.size(); //decreasing 5,4,3,2,1,0
+			layers.push_back(tlg); //note that layers stores values decreasingly 5,4,3,2,1,0
 			tlg = (tlg+1) >> 1;
 		}
 		for (int i = lg-1; i >= 0; i--) {
 			onLayer[i] = max(onLayer[i], onLayer[i+1]);
 		}
 		int betweenLayers = max(0, (int)layers.size() - 1);
-		int bSzLog = (lg+1) >> 1;
-		int bSz = 1 << bSzLog;
-		indexSz = (n + bSz - 1) >> bSzLog;
+		int bSzLog = (lg+1) >> 1; //Number of bits of log
+		int bSz = 1 << bSzLog; //Number of bits considered 2^bSzlog.
+		indexSz = (n + bSz - 1) >> bSzLog; // remaining to fulfill a power of two..
 		v.resize(n + indexSz);
 		pref.assign(layers.size(), vector<SqrtTreeItem>(n + indexSz));
 		suf.assign(layers.size(), vector<SqrtTreeItem>(n + indexSz));
@@ -192,7 +196,7 @@ int main() {
 	cout << "Hello, " << rnd() << "!" << endl;
 	//int n, m, k; cin >> n >> m >> k;
 	int m; cin >> m;
-	for (int n = 1; n <= 1000; n++) {
+	for (int n = 1; n <= 1; n++) {
 		cout << "#" << n << endl;
 		vector<SqrtTreeItem> v(n);
 		for (int i = 0; i < n; i++) {

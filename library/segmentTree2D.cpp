@@ -1,6 +1,6 @@
 /*
  * Note that x refers to the rows and y refers to the cols, even thouh it
- * its counter intuitive..
+ * is counter intuitive..
  * */
 #include <bits/stdc++.h>
 #define NA 0
