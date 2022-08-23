@@ -153,7 +153,7 @@ int query(pitem T, int a, int b, int k){
 int main(){
    int A[]={1,23,4,5,6,7,9};
    vector<int> B={1,23,4,5,6,7,9};
-   auto T = build(A, 7);
+   auto T = build(A, 7); //plus random heap!
    print(T);
    cout <<"find the 2-kth from values 4 to 9:"<<endl;
    cout<<query(T, 4, 9, 2)<<endl;

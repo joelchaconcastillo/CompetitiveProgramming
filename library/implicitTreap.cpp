@@ -3,10 +3,11 @@ using namespace std;
 typedef struct item *pitem;
 struct item{
    int prior, value, cnt, sum, min, max, add, assign;
-   bool rev;
+   bool rev, valueAsPrior;
    pitem l, r, p;
    item(){}
-   item(int value) :prior(rand()), value(value), cnt(0),sum(0), min(INT_MAX), max(-INT_MAX), add(0),assign(INT_MAX),rev(false), l(NULL), r(NULL), p(NULL){ }
+   item(int value) :prior(rand()), value(value), cnt(0),sum(0), min(INT_MAX), max(-INT_MAX), add(0),assign(INT_MAX),rev(false), valueAsPrior(false), l(NULL), r(NULL), p(NULL){ }
+   item(int prior, int value) :prior(prior), value(value), cnt(0),sum(0), min(INT_MAX), max(-INT_MAX), add(0),assign(INT_MAX),rev(false), valueAsPrior(true), l(NULL), r(NULL), p(NULL){ }
 };
 class implicitTreap{
    pitem root=NULL;
@@ -52,6 +53,9 @@ class implicitTreap{
           upd_min(t);
           upd_max(t);
       }
+      /*
+       *Lazy propagation...
+       * */
       void pushReverse(pitem it) {
           if (it && it->rev) {
               it->rev = false;
@@ -80,6 +84,7 @@ class implicitTreap{
          pushReverse(it);
          pushAdd(it);
          pushAssign(it);
+	 if(it && it->valueAsPrior)it->prior=it->value;
       }
       void merge(pitem &t, pitem l, pitem r){
           push(l);
@@ -141,6 +146,15 @@ class implicitTreap{
       void erase(int key){
 	erase(root, key);
       }
+      int kth(pitem T, int k){
+        if(!T)return -1;
+	int val=-1;
+        if(cnt(T->l)+1==k)val=T->value;
+	else if(cnt(T->l)+1<k) val=kth(T->r, k-cnt(T->l)-1);
+        else val=kth(T->l, k); 
+	update(T);
+	return val;
+      }
       void reverse(int l, int r){
         pitem t1, t2, t3;
         split(root, t1, t2, l);
@@ -193,6 +207,16 @@ class implicitTreap{
        merge(root, root, t3);
        return maxv;
       }
+
+      int queryKth(int l, int r, int k){
+        pitem t1,t2,t3;
+        split(root, t1, t2, l);
+        split(t2, t2, t3, r-l+1);
+        int knum= kth(t2, k);
+        merge(root, t1, t2);
+        merge(root, root, t3);
+        return knum;
+      }
       void build(vector<int> &A){
         int n=A.size();
         pitem T=NULL;
@@ -201,6 +225,18 @@ class implicitTreap{
            insert(root, T1, i);
         }
       }
+      /*
+       *The tree is created by value instead randomly, which can not ensure a blanced tree!!
+       * */
+      void buildValue(vector<int> &A){
+        int n=A.size();
+        pitem T=NULL;
+        for(int i=0; i < n; i++){
+           pitem T1=new item(A[i], A[i]);
+           insert(root, T1, i);
+        }
+      }
+
       void output(pitem t){
         if(!t) return;
         push(t);
@@ -215,7 +251,7 @@ class implicitTreap{
 int main(){
    implicitTreap it;
    vector<int> B={1,23,4,5,6,7,9};
-   it.build(B);
+   it.buildValue(B);
    it.insert(400,5);
    it.output();
    cout<<endl;
@@ -247,9 +283,10 @@ int main(){
   // output(T);
    cout<<endl;
    it.assign(3,6, 10);
-//   output(T);
+   it.output();
    cout<<endl;
    cout<<it.queryMin(0, 6)<<endl;
    cout<<it.queryMax(0, 6)<<endl;
+   cout<<it.queryKth(1,5, 3)<<endl;
    return 0;
 }
