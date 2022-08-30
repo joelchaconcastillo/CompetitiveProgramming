@@ -6,21 +6,22 @@ pair<int, int> operator+(pair<int, int> a, pair<int, int> b){
   return {a.first+b.first, a.second+b.second};
 }
 void assignDir(pair<int, int> next){
-  if(W.find(next+offset['W'])==W.end())
-    W[next]=next+offset['W'];
-  else W[next]=W[next+offset['W']];
 
-  if(E.find(next+offset['E'])==E.end())
-    E[next]=next+offset['E'];
-  else E[next]=E[next+offset['E']];
+  auto tmp = next+offset['W'];
+  while(W.find(tmp)!=W.end()) tmp = W[tmp];
+  W[next]=tmp;
 
-  if(N.find(next+offset['N'])==N.end())
-    N[next]=next+offset['N'];
-  else N[next]=N[next+offset['N']];
+  tmp = next+offset['E'];
+  while(E.find(tmp)!=E.end()) tmp = E[tmp];
+  E[next]=tmp;
 
-  if(S.find(next+offset['S'])==S.end())
-    S[next]=next+offset['S'];
-  else S[next]=S[next+offset['S']];
+  tmp = next+offset['N'];
+  while(N.find(tmp)!=N.end()) tmp = N[tmp];
+  N[next]=tmp;
+
+  tmp = next+offset['S'];
+  while(S.find(tmp)!=S.end()) tmp = S[tmp];
+  S[next]=tmp;
 }
 int main(){
    offset['E']={0, 1};
@@ -40,7 +41,6 @@ int main(){
     N[pos]=pos+offset['N'];
     S[pos]=pos+offset['S'];
     for(auto i:dir){
-	cout<<pos.first<<","<<pos.second<<endl;
        pair<int, int> next;
       if(i=='E'){ 
 	next=E[pos];
