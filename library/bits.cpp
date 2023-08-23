@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+int get(int b, int i){ return (b & (1<<i))>>i; }
+int setb(int b, int i){ return b | (1<<i);}
+int clear(int b, int i){ return b & ~(1<<i);}
+int flip(int b, int i){ return b ^ (1<<i);}
 #define isON(S,j)(s&(1ll<<j))
 #define setBit(S,j)(s|=(1ll<<j))
 #define clearBits(S,j)(S&=~(1ll<<<j))
